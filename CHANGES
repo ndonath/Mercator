@@ -6,6 +6,12 @@
 # This file is part of MERCATOR.
 # See the file COPYING for the GNU General Public License.
 
+69.0:
+- Anzeige des Punkteschnitts korrigiert
+- Unterstützung für Flotten
+- Anpassungen für neue Version der libpng
+
+
 64.5:
 
 Neue Attribute (Dank an Norbert Donath fuer Patches!):

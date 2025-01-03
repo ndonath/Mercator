@@ -1,5 +1,5 @@
-# $Id: README,v 1.11 2006/02/12 15:55:01 schwarze Exp $
 # File: README
+# Copyright (C) 2006-2024 Norbert Donath
 # Copyright (C) 2003-2006 Ingo Schwarze
 # Copyright (C) 2002 Marko Schulz
 # Author: Marko Schulz <harleen@gmx.de>
@@ -101,18 +101,6 @@ geeignetes Verzeichnis zu verschieben, etwa nach /usr/local/bin/.
 Schließlich können bei Interesse weitere Graphiksets parallel zu
 "minimal" installiert werden, wenn welche zur Verfügung stehen.
 
-Die eigentliche Kompilierung wurde auf folgenden Plattformen erprobt:
-
- - OpenBSD 3.0, gcc version 2.95.3, GNU Make version 3.79.1
- - OpenBSD 3.5, gcc version 2.95.3, GNU Make version 3.80
- - OpenBSD 3.8, gcc version 3.3.5,  GNU Make version 3.80
- - debian Linux 2.4.18, gcc version 2.95.4, GNU Make version 3.79.1
- - debian Linux 2.6.8, gcc version 3.3.4, GNU Make version 3.80
- - debian Linux 2.6.8, gcc version 3.3.5, GNU Make version 3.80
- - SuSe Linux 2.4.19, gcc version 3.2, GNU Make version 3.79.1
- - Windows NT, minGW version 1.0, mingw32-make
-
-Erfahrungsberichte von anderen Plattformen sind willkommen.
 
 
 Grundlagen der Bedienung
@@ -249,16 +237,7 @@ und schreibt sowohl html-Dateien als auch die Karte für die nächste
 Runde.
 
 Die mit Mercator erzeugten Reporte sollten sich in jedem framefähigen
-Browser problemlos darstellen lassen. Erfolgreich getestet wurde das 
-bisher mit den folgenden:
-
-IE 4.0 und höher (Windows)
-Netscape 4.x (Windows und Linux)
-Opera 5      (Windows und Linux)
-Mozilla M16  (Windows)
-Mozilla 9.4  (Linux)
-Konqueror 2.1.1 und höher (Linux)
-Amaya 5.1 (OpenBSD)
+Browser problemlos darstellen lassen.
 
 
 Viel Spaß mit Eressea und mercator wünschen
@@ -266,6 +245,7 @@ Viel Spaß mit Eressea und mercator wünschen
       Roger Butenuth <butenuth@online.de> (ursprünglicher Autor von Mercator)
       Marko Schulz <harleen@gmx.de>
       Ingo Schwarze <schwarze@usta.de>
+      Norbert Donath <Norbert.Donath@gmx.de>
 
 P.S.: Dieses Programm unterliegt der GPL (GNU General Public Licence),
       für Details siehe Datei COPYING in diesem Verzeichnis.
