@@ -1,0 +1,26 @@
+# Makefile für "Linux Eressea Map Tool", kurz: lemap
+# $Id: Makefile.NT,v 1.1 1999/12/19 19:46:54 butenuth Exp $
+
+CFLAGS = -g -Wall -O2 -I../libpng-1.0.5 -I../zlib -mno-cygwin
+CC = gcc
+
+SOURCES=map.c html.c parse/parser.c parse/zauber.c parse/meldungen.c \
+        parse/parteien.c parse/einheiten.c parse/region.c merian.c image.c
+
+OBJECTS = $(SOURCES:%.c=%.o)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+all:	mercator
+
+clean:
+	-rm *~ *.o mercator
+
+tgz:	clean
+	cd .. ; tar -X mercator/exclude -czf mercator.tar.gz mercator
+
+mercator:	$(OBJECTS)
+	gcc $(CFLAGS) $(OBJECTS) -L../libpng-1.0.5 -L../zlib -lpng -lz -o $@
+
+$(OBJECTS):	map.h

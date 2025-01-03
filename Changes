@@ -1,0 +1,50 @@
+64.1:
+
+- html.c: Mallorn und Mallornschoesslinge wurden bei der Berechnung der 
+  freien Arbeitsplaetze ignoriert
+
+max. Kartengroesse wird jetzt ebenenweise abgespeichert; Dadurch sollte
+die Nachbearbeitung des Reports etwas schneller werden, falls mehrere Ebenen
+vorhanden sind.
+- map.h: max_x, max_y, min_x, min_y von map_t zu ebene_t bewegt
+- parse/region.c, map.c: die Liste aller Ebenen wird nun zentral in 
+  add_to_map() (map.c) verwaltet und nicht mehr in parse_region()
+- parse/parser.c, map.c, html.c, image.c: Anpassungen an Anderung in map.h
+
+64.0:
+
+- html.c: Veraenderungen gegenueber der Vorrunde anzeigen
+- map.c: der Regionslohn wurde bei write-cr um 1 Silber zu hoch abgespeichert
+
+63.3:
+Ingo Schwarze, 5.3.2002:
+- BESCHREIBE PRIVAT anzeigen,
+  aehnlich wie im NR mit (Bem: ...) hinter der Beschr.
+  Aenderungen in map.h, parse/einheiten.c, html.c
+- Aktive Vulkane und (astrale) Nebel einbauen.
+  Bei der Gelegenheit region_t gruendlich aufraeumen:
+  parse/region.c ist um mehr als 3%, image.c um gut 1% kleiner geworden,
+  map.h, map.c und html.c haben sich um weniger als 200 Byte geaendert -
+  bei reduzierter Komplexitaet und erweiterter Funktionalitaet...  :-)
+
+
+63.2:
+
+- mercator.c: Option -wsp hinzugefuegt (analog zu -wsh)
+- mercator.c: statt nur auf die README zu verweisen wird beim Start ohne
+  Optionen eine kleine Hilfe angezeigt
+- mercator.c: fuer die Option move kann das Kuerzel -m verwendet werden
+- map.c: bei move_map() wurde die Variable map schon vor dem Test auf NULL beschrieben
+- map.c: die Option write-map schreibt jetzt auch RESOURCE Bloecke
+- html.c: Anzeige der Veraenderung zur Vorwoche bei Resourcen eingefuehrt
+- map.h: Option ;noskillpoints wird gespeichert
+- html.c: Lerntage werden nicht mehr angezeigt bei noskillpoints == 1
+- html.c: Erstellung von Einzelkarten (momentan deaktiviert) wieder halbwegs
+  gangbar gemacht (fuer den Fall, dass das jemals wieder aktiviert werden sollte...)
+- image.c: Skalierung in write-png() erlauben
+- image.c: write-png() konnte bei mehreren Ebenen einen Absturz verursachen
+
+63.1:
+
+- map.c: statt region->durchschiffung wurde der Speicher von 
+         region->durchreise freigegeben -> moeglicher Absturz

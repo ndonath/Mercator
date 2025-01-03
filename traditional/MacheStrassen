@@ -1,0 +1,20 @@
+mkdir .S_tmp && cd .S_tmp || exit 1
+ppmmake white 49 57 > Sbg.ppm
+ppmmake \#010100 26 3 > Sho.ppm
+pnmpaste Sho.ppm 23 27 Sbg.ppm > S2.ppm
+pnmpaste Sho.ppm 0 27 Sbg.ppm > S5.ppm
+ppmmake \#fefeff 3 30 > Sve.ppm
+pnmshear -noantialias 30 Sve.ppm | pnminvert > Svl.ppm
+pnmshear -noantialias -30 Sve.ppm | pnminvert > Svr.ppm
+pnmpaste Svl.ppm 7 0 Sbg.ppm > S0.ppm
+pnmpaste Svr.ppm 21 0 Sbg.ppm > S1.ppm
+pnmpaste Svr.ppm 7 27 Sbg.ppm > S4.ppm
+pnmpaste Svl.ppm 21 27 Sbg.ppm > S3.ppm
+pnmtopng -transparent =white S0.ppm > ../Strasse0.png
+pnmtopng -transparent =white S1.ppm > ../Strasse1.png
+pnmtopng -transparent =white S2.ppm > ../Strasse2.png
+pnmtopng -transparent =white S3.ppm > ../Strasse3.png
+pnmtopng -transparent =white S4.ppm > ../Strasse4.png
+pnmtopng -transparent =white S5.ppm > ../Strasse5.png
+cd ..
+rm -rf .S_tmp

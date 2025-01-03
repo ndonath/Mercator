@@ -1,0 +1,271 @@
+# $Id: README,v 1.11 2006/02/12 15:55:01 schwarze Exp $
+# File: README
+# Copyright (C) 2003-2006 Ingo Schwarze
+# Copyright (C) 2002 Marko Schulz
+# Author: Marko Schulz <harleen@gmx.de>
+# This file is part of MERCATOR.
+# See the file COPYING for the GNU General Public License.
+
+         Tips zur Benutzung von mercator - ein Atlantis Map Tool
+         =======================================================
+
+Einführung und Übersicht
+------------------------
+
+Mercator ist ein Programm, um aus einem Atlantis-Computerreport einen
+übersichtlichen HTML-Report zu erzeugen.  Es wurde ursprünglich von
+Roger Butenuth unter der GPL entwickelt, dann einige Zeit von Marko
+Schulz betreut und verbessert.  Nachdem Marko das Eressea-Spielen
+aufgegeben hat, habe ich (Ingo Schwarze) die Betreuung übernommen.
+
+Folgende Formate werden geschrieben:
+
+1. Eine html-Übersicht über alle Regionen (auch mehrere Ebenen werden
+   unterstützt).
+2. Einen abgespeckten Computerreport.
+   Im Gegensatz zu Merian-Karten hat dieses Format den Vorteil,
+   daß die Regionsnamen mit abgespeichert werden. Zusätzlich werden alle
+   Adressen gespeichert, so dass man einen Überblick über alle Parteien
+   hat, die man irgendwann einmal gesehen hat.
+3. Eine Gesamtkarte als PNG-Datei (Vorsicht, kann sehr groß werden).
+
+Die Varianten 2 und 3 - Computerreport und reine PNG-Karte - wurden
+lange nicht mehr gewartet und können veraltet sein.  Die
+Standardvariante 1 funktioniert jedoch sowohl für Eressea- als auch
+für Sitanleta-Reports der Version 64 zufriedenstellend.
+
+
+Installation
+------------
+
+Neben dem ausführbaren Programm "mercator" gehört zur
+Mercator-Installation ein Bibliotheksverzeichnis mit png-Bildern.  Vor
+der Kompilierung sollte entschieden werden, wo dieses
+Bibliotheksverzeichnis angelegt werden soll.  Auf UNIX-Systemen ist
+die Standard-Einstellung /usr/local/libdata/mercator/ sicherlich eine
+gute Wahl.  Natürlich ist auch jeder andere Pfad möglich, selbst im
+Homeverzeichnis, zum Beispiel, falls keine root-Rechte zur Verfügung
+stehen.
+
+Als erster Schritt zur Installation sollte dieses
+Bibliotheksverzeichnis angelegt und sollten die Bilder dorthin
+ausgepackt werden.  Es empfiehlt sich, zunächst den
+Standard-Graphikset mercimg-minimal (zum Beispiel aus
+mercimg-minimal-1.2.tar.gz) zu installieren; beim Auspacken muss das
+im Graphikset enthaltene Verzeichnis "minimal" zum direkten
+Unterverzeichnis des Bibliotheksverzeichnisses werden, bei Verwendung
+der Standardeinstellung also zum Beispiel
+/usr/local/libdata/mercator/minimal/.
+
+Ab der Mercator-Version 64.5 muessen die Graphiksets mindestens
+folgende Versionsnummern haben: mercimg-micro-1.2, mercimg-minimal-1.2
+und mercimg-traditional-0.2.  Niedrigere Versionen enthalten kein
+Bild fuer den Regionstyp "Eisberg", was zum Abbruch von Mercator
+fuehren kann.
+
+Anschließend sollte bei Bedarf in der Datei "Makefile" in der Zeile
+
+    CONFIGPATH = /usr/local/libdata/mercator
+
+gegebenenfalls der gewählte Pfad eingetragen werden.  Die spezielle
+Einstellung
+
+    CONFIGPATH = NULL
+
+bewirkt, dass die Graphiksets stets im aktuellen Verzeichnis gesucht
+werden.  Das ist die Standardeinstellung bei Windows.
+
+Vor dem Start der Kompilierung sollte man den Anfang der Datei
+"Makefile" anschauen und sich überzeugen, dass die benötigten Header-
+und Bibliotheksdateien auf dem eigenen Rechner vorhanden sind und dass
+im Makefile der richtige Pfad zu ihnen angegeben ist.  Wer bisher
+keine png-Bibliotheken auf seinem Rechner hat, wird sie vor der
+Kompilierung von Mercator erst installieren müssen.
+
+In der Datei "Makefile" kann man auch einstellen, falls man eine
+Debugging-Version von Mercator haben möchte (-DMALLOC_DEBUG) oder
+falls man *.ere-Dateien haben möchte, um mit dem gotoline-Werkzeug zu
+arbeiten (-DGOTOLINE).  Beides ist per Default abgeschaltet und kann
+gefahrlos ignoriert werden.
+
+Die Kompilierung erfolgt, indem man in das Verzeichnis wechselt, wo
+sich die Datei mercator.c befindet, und dort das Programm GNU Make
+ohne Parameter aufruft.  Unter Linux ist der erforderliche Befehl
+gewöhnlich "make", unter BSD in der Regel eher "gmake", unter Windows
+womöglich gar "mingw32-make" oder etwas ähnliches.
+
+Durch Aufruf von Make wird die ausführbare Datei "mercator" erstellt.
+Es ist bequem, aber nicht zwingend erforderlich, diese in ein
+geeignetes Verzeichnis zu verschieben, etwa nach /usr/local/bin/.
+
+Schließlich können bei Interesse weitere Graphiksets parallel zu
+"minimal" installiert werden, wenn welche zur Verfügung stehen.
+
+Die eigentliche Kompilierung wurde auf folgenden Plattformen erprobt:
+
+ - OpenBSD 3.0, gcc version 2.95.3, GNU Make version 3.79.1
+ - OpenBSD 3.5, gcc version 2.95.3, GNU Make version 3.80
+ - OpenBSD 3.8, gcc version 3.3.5,  GNU Make version 3.80
+ - debian Linux 2.4.18, gcc version 2.95.4, GNU Make version 3.79.1
+ - debian Linux 2.6.8, gcc version 3.3.4, GNU Make version 3.80
+ - debian Linux 2.6.8, gcc version 3.3.5, GNU Make version 3.80
+ - SuSe Linux 2.4.19, gcc version 3.2, GNU Make version 3.79.1
+ - Windows NT, minGW version 1.0, mingw32-make
+
+Erfahrungsberichte von anderen Plattformen sind willkommen.
+
+
+Grundlagen der Bedienung
+------------------------
+
+Die Steuerung von mercator erfolgt vollständig über die Kommandozeile,
+mehrere Befehle können nacheinander angegeben werden.  Der erste
+sollte immer eine Datei einlesen, zum Beispiel "read-cr 331.cr" oder
+kurz "-rc 331.cr".
+
+Mit dem Befehl "merge-cr <Datei>" bzw. "-mc <Datei>" läßt sich ein
+weiterer Computerreport dazunehmen, dabei gehen die dynamischen
+Informationen der vorher gelesenen Reports verloren.  Beispiel:
+
+  mercator read-cr map.cr merge-cr 323-dyLL.cr
+
+Der Befehl "write-html <Verzeichnis>" (bzw. -wh <Verzeichnis>) produziert im
+angegebenen Verzeichnis eine Reihe von html-Seiten: Eine für jede Region und
+einige Übersichtsdateien. Der Einstieg ist "index.html". Die meisten
+html-Seiten dürften selbsterklärend sein. Von der Seite "Parteien" aus
+kann man sehen, in welchen Regionen man mit anderen Parteien zusammen
+steht.
+
+Um nur ein Bild zu erstellen, wird die Option "write-png <Dateiname>"
+bzw. "-wp <Dateiname>" benutzt.
+
+
+Bedienung für Fortgeschrittene
+------------------------------
+
+Falls mercator mit einem anderen als dem gewünschten Bibliothekspfad
+kompiliert wurde, kann der Pfad mit dem Befehl "lib-path <Pfad>"
+(bzw. -p <Pfad>) zur Laufzeit angegeben werden.  Dies eignet sich vor
+allem für die Prüfung neuer Graphiksets vor der Installation ins
+eigentliche Bibliotheksverzeichnis.  Statt ständig diese Option zu
+benutzen, ist es gewöhnlich bequemer, mercator wie im Kapitel
+"Installation" beschrieben neu zu kompilieren.
+
+Mit dem Befehl "style <Name>" (bzw. -st <Name>) kann ein anderes als
+das eincompilierte Graphikset gewählt werden.  Die Grafiken müssen
+sich einem Unterverzeichnis des Bibliotheksverzeichnisses befinden,
+welches als config.path eincompiliert oder mit dem Befehl "lib-path"
+angegeben wurde und den bei "style" angegebenen Namen trägt.  In der
+Regel liegt dieses Verzeichnis also neben dem Verzeichnis "minimal".
+
+Mit dem Befehl "scale <Faktor>" (bzw. -sc <Faktor>) kann die Größe der
+erzeugten Grafiken verringert werden.  Die Standardgröße ist "scale
+1".  Der scale-Befehl muss vor dem ersten write-Befehl stehen.  Bei
+der Verwendung von Graphiksets mit großen Bildern ist es für große
+Karten empfehlenswert, große scale-Faktoren zu wählen, etwa "scale 4"
+bis "scale 8".  Das bringt nicht nur mehr Übersicht, sondern spart vor
+allem Arbeitsspeicher sowohl bei der Reporterstellung als auch bei der
+späteren Anzeige im Browser.  Der minimal-Graphikset sollte dagegen in
+der Regel nicht kleiner skaliert werden, weil sonst nicht mehr viel zu
+erkennen ist.
+
+Der Befehl "write-map <Dateiname>" (bzw. "write-cr <Dateiname>" oder
+einfach "-o <Dateiname>") schreibt den abgespeckten Computerreport.
+Dabei werden auch Inselnamen, Regionsinformationen und Straßeninfos
+mitgeschrieben.  Gebäude, Schiffe und Einheiten werden aber
+weggelassen.  Weil dieser Befehl lange nicht mehr gewartet wurde,
+sollte das Ergebnis grob auf Plausibilität geprüft werden.
+
+Mit "move <x> <y>" lassen sich alle Koordinaten um die angegebenen
+Werte verschieben.  Es wird x bzw. y auf alle Koordinaten addiert, das
+heißt, dieser Befehl wirkt genau anders herum als der Befehl in
+Eressea.  Die Verwendung von "move" kann besonders zwischen "read-cr"
+und "merge-cr" sinnvoll sein, wenn die beiden Reports verschiedene
+Koordinatensysteme verwenden.  Zwischen "read-cr" und "write-cr" kann
+er benutzt werden, um eine Karte zu verschieben.  Zum Verschieben von
+Karten ist allerdings das Programm "crshift" aus dem Paket "cristools"
+einfacher und zuverlässiger, also empfehlenswerter als Mercator.
+
+Mit "select <Bitmask>" oder "-se <Bitmask>" kann gesteuert werden, was
+in einer Region vorhanden und über eine Region bekannt sein muss,
+damit durch den Befehl "write-html" zu dieser Region eine eigene
+HTML-Seite geschrieben wird.  Das Argument ist eine vorzeichenlose
+ganze Zahl, die als Bitmaske interpretiert wird.  Die Bedeutung der
+einzelnen Bits ist:
+
+   1: In der Region befindet sich eine Einheit.
+   2: In der Region befindet sich ein Gebäude (BURG-Block).
+   4: In der Region befindet sich ein Schiff.
+   8: In der Region gibt es Straßen oder Feuerwände (GRENZE-Block).
+  16: Zu der Region gibt es Botschaften oder Meldungen.
+  32: Die Region wurde durchreist oder durchschifft.
+  64: Es sind Resourcen oder Handelspreise bekannt.
+ 128: Die Region hat eine Beschreibung.
+ 256: Die Region trägt einen Namen.
+
+Der Default-Wert ist "select 119", es müssen also Einheiten, Gebäude,
+Schiffe, Botschaften oder Resourcen bekannt sein, damit eine Region
+ausgegeben wird.
+
+Mit "verbose <Level>" oder "-v <Level>" kann gesteuert werden, wie
+viel Ausgabe das Programm Mercator auf den Bildschirm erzeugt.  Level
+0 ist sehr schweigsam, Level 1 gibt nur Fehlermeldungen aus und Level
+2 erzeugt einige zusätchlich Informations-Meldungen.  Die
+Standardeinstellung ist 2.
+
+
+Erläuterungen zur erzeugten HTML-Ausgabe
+----------------------------------------
+
+Bei Einheiten mit Talent "Unterhaltung" oder "Steuereintreiben" steht
+hinter der Einheit, wieviel sie verdienen kann. Das Regionslimit wird
+dabei nicht überprüft, ebenso bei treibenden Einheiten, ob sie ein
+Waffentalent mit zugehöriger Waffe besitzen.
+Hinter dem Talent "Magie" stehen die Kosten, die für weiteres Lernen bezahlt
+werden müssen.
+Bei dem Talent Reiten wird angegeben, wieviele GE noch transportiert werden
+können:
+110 Tage (T2) Reiten [10/25 GE]
+Diese Einheit kann 10 GE transportieren und noch reiten oder 25 GE
+transportieren und zu Fuß gehen. Bei der Berechnung wird die Anzahl Personen,
+die Pferde und die Wagen berücksichtigt. Sind mehr Wagen vorhanden, als
+benutzt werden können, so wird berücksichtigt, dass sie dann auf die anderen
+Wagen verladen werden. Steht hinter dem Talent nur eine oder gar keine Angabe,
+dann kann sich die Einheit nur eine Region weit bewegen oder eben gar nicht.
+
+
+Beispielaufruf
+--------------
+
+  mercator read-cr map.cr merge-cr 004.cr write-html html write-map map.cr
+
+Schreibfaule können stattdessen auch das schreiben:
+
+  mercator -rc map.cr -mc 004.cr -wh html -wc map.cr
+
+Liest eine Karte im Computerreport-Format ein (z.B. aus der letzten
+Runde), aktualisiert sie mit dem aktuellen Computerreport ("004.cr")
+und schreibt sowohl html-Dateien als auch die Karte für die nächste
+Runde.
+
+Die mit Mercator erzeugten Reporte sollten sich in jedem framefähigen
+Browser problemlos darstellen lassen. Erfolgreich getestet wurde das 
+bisher mit den folgenden:
+
+IE 4.0 und höher (Windows)
+Netscape 4.x (Windows und Linux)
+Opera 5      (Windows und Linux)
+Mozilla M16  (Windows)
+Mozilla 9.4  (Linux)
+Konqueror 2.1.1 und höher (Linux)
+Amaya 5.1 (OpenBSD)
+
+
+Viel Spaß mit Eressea und mercator wünschen
+
+      Roger Butenuth <butenuth@online.de> (ursprünglicher Autor von Mercator)
+      Marko Schulz <harleen@gmx.de>
+      Ingo Schwarze <schwarze@usta.de>
+
+P.S.: Dieses Programm unterliegt der GPL (GNU General Public Licence),
+      für Details siehe Datei COPYING in diesem Verzeichnis.

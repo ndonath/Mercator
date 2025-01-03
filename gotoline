@@ -1,0 +1,14 @@
+#!/bin/bash
+
+eressea=/home/marko/eressea/merc
+
+#hier noch "file:" abschneiden
+dummy=$(echo $1 | cut -d: -f2)
+einheit=$(cat $dummy)
+
+zeile=$( grep -i -n -E "EINHEIT +${einheit} *(;| *$)" ${eressea}/*.ers | cut -d ":" -f 1 )
+#Dieser Eintrag startet emacs
+#emacsclient -n +$zeile ${eressea}/*.ers
+
+#oder falls man lieber nedit nutzt...
+nc -line $zeile ${eressea}/*.ers -noask

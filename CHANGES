@@ -1,0 +1,209 @@
+# $Id: CHANGES,v 1.6 2006/02/12 15:55:00 schwarze Exp $
+# File: CHANGES
+# Author: Marko Schulz <harleen@gmx.de>
+# Copyright (C) 2003-2006 Ingo Schwarze
+# Copyright (C) 2002 Marko Schulz
+# This file is part of MERCATOR.
+# See the file COPYING for the GNU General Public License.
+
+64.5:
+
+Neue Attribute (Dank an Norbert Donath fuer Patches!):
+- map.h, language.c, parse/parteien.c, html.c: Alter der Partei
+- parse/region.c, html.c: Ladung von Schiffen (cargo, capacity)
+- parse/einheiten.c, html.c: Gewicht von Einheiten
+
+Weitere neue Features:
+- image.c, map.c, html.c: Neuer Regionstyp Eisberg
+- image.c: Nur fertige Strassen grafisch darstellen
+
+Bugfixes:
+- parse/parser.c: Strings koennen jetzt \" enthalten -
+  frueher wurde das Einlesen des Strings dort abgebrochen.
+- parse/region.c: Schiffsgroesse erst nach dem Parsen verarbeiten -
+  sonst gab es Aerger, wenn ;Groesse vor ;Typ kam.
+
+
+64.4:
+
+- map.h, html.c, language.c, parse/einheiten.c, parteien.c: Helden anzeigen
+- image.c: Roter Punkt auch bei Regionsmeldungen etc.
+- html.c, parse/meldungen.c: Uebersichten fuer mehrere Parteien
+- parse/parser.c: Ignoriere Leerzeilen, statt abzustuerzen
+
+
+64.3:
+
+Flexiblere Auswahl von Regionen:
+- map.h: Neues Attribut region_flags in config_t
+- html.c: Verwendung von config.region_flags in region_filter
+- mercator.c: Neue Funktion get_arg_int statt set_scale
+- mercator.c: Default-Wert config.region_flags=119
+- mercator.c: Argument "select", "-se" interpretieren
+
+Robusteres Verfahren zur Beendigung von Bloecken:
+- parse/parser.h, parse/parser.c: Entferne is_subblock aus report_t
+- parse/parser.h, parse/parser.c: Neue Funktion expect_in_version
+- parse/parser.h, parse/parteien.c: Neue Funktion expect_in_partei
+- parse/parser.h, parse/parser.c: Neue Funktion expect_in_region
+- parse/parser.c: Verwendung in parse_report
+- parse/parteien.c: Verwendung in parse_gruppe, parse_partei
+- parse/region.c: Verwendung in parse_schiff, _burg, _umgebung, _region
+- parse/einheiten.c: Verwendung in parse_einheit
+
+Bugfixes:
+- map.h, parse/parser.h /parser.c /parteien.c /zauber.c, html.c:
+  ZAUBER und TRANK gehoert zu VERSION, nicht PARTEI
+  Dank fuer die Fehlermeldung an Roman "Baron de Ley"
+- parse/parteien.c: ignoriere Block FEHLER
+- parse/region.c: ignoriere Block SCHEMEN
+- parse/einheiten.c: "Verkleidung" als Alias fuer "Anderepartei" (Magellan)
+- parse/parser.c, parteien.c, region.c, einheiten.c:
+  Mehrere von Magellan benutzte Bloecke und Tags ignorieren
+- map.c: korrekte Behandlung von config.path==NULL und config.style==NULL
+  Dank fuer die Fehlermeldung an Stefan "Dino" Kuchenbrod
+- mercator.c: #ifdef WINDOWS config.path = NULL
+
+Verbesserte Diagnostik:
+- map.h, mercator.c, parse/parser.c: CRVERSION, MVERSION const statt macros
+- map.h: Neues Attribut verbose in config_t
+- mercator.c: Optionen "verbose", "-v"
+- parse/parser.h, parse/parser.c: neue generische Funktion skip_block
+- parse/parser.h, parse/parser.c:
+  parsefehler verallgemeinert, parse_unbekannt integriert
+- parse/parser.h, parse/parser.c: parse_optionen ersetzt durch skip_block
+- parse/parser.h, parse/meldungen.c: parse_messagetypes -> skip_block
+- parse/parser.c, parteien.c, meldungen.c, region.c, einheiten.c, zauber.c:
+  verwende parsefehler, verbesserte Diagnostik
+- mercator.c, map.c, html.c, image.c, language.c: verbesserte Diagnostik
+
+
+64.2:
+
+Anpassung an verschiedene Spiele:
+- map.h: neues enum game_e, neues Feld game in map_t
+- parse/region.c: ;Baeume nur bei Eressea-Reporten ab v59 ignorieren
+- html.c: Baeume brauchen in Sitanleta mehr Platz als in Eressea
+- map.h: schatz in partei_t fuer Sitanleta
+- parse/parteien.c: Tag ;Schatz in Partei einlesen (Sitanleta)
+- html.c: Sitanleta-Reichsschatz ausgeben
+- map.h: helfe_alles in struct config_t
+- parse/parser.c: Werte im struct config definieren
+- html.c: Verwendung von helfe_alles
+- parse/parser.c: Tag ;Locale statt ;locale akzeptieren (Sitanleta)
+- parse/parteien.c: Tag ;Runde in PARTEI ignorieren (Sitanleta)
+- parse/parteien.c: Tag ;Ursprungsae in PARTEI ignorieren (Sitanleta)
+- parse/region.c: ;Steine in REGION ignorieren (nur bei Eressea)
+- parse/region.c: SCHEMEN in REGION ignorieren (Eressea)
+
+Unterscheidung von Lohn und Bauernlohn:
+- parse/region.c: Lohn aus dem CR unveraendert speichern
+- map.c: Lohn unveraendert in den CR speichern
+- html.c: korrekte Bestimmung von Lohn und Bauernlohn (Eressea und Sitanleta)
+
+Neue Regionstypen Nichts, Weltenrand, Dichter Nebel; Strassendarstellung
+- map.h: enum region_t erweitert
+- map.c: *region_typ_name[] und Funktion region_equiv erweitert
+- html.c: max_bauern erweitert
+- image.c: neue png-Dateien einbinden
+- parse/region.c: Unterscheidung von T_NICHTS und T_LAND
+
+Burge und Schiffe koennen jetzt magische Effekte haben
+- map.h: *first_effect in burg_t und schiff_t
+- parse/region.c: EFFECTS in BURG und SCHIFF einlesen
+- parse/region.c: ein zusaetzlicher assert-Befehl in parse_effects
+- map.c: entsprechende Aufrufe von destroy_meldungs_liste
+- html.c: Burg- und Schiffs-Effekte ausgeben
+- html.c: Trennung der Funktionen write_meldungen und write_lpmeldungen
+
+Behandlung von Partei-Optionen verbessert und vereinfacht:
+- map.h: enum option_e entfernt
+- mercator.h: enum option_info_t entfernt
+- html.c, language.c: Typ von option_info geaendert in char*[]
+- html.c: verbesserte Ausgabe der Parteioptionen
+- language.c: set_global_names jetzt spielabhaengig
+
+Parteien koennen jetzt ein Rassen-Praefix haben
+- map.h: *typprefix in partei_t
+- parse/parteien.c: Tag ;typprefix in PARTEI einlesen (Sitanleta)
+- map.c: entsprechender Aufruf von xfree
+- html.c: Ausgabe von Rassen-Praefixen auf der Parteien-Seite
+
+Neue Optionen fuer verschiedene Graphik-Sets: lib-path, -p, style, -st
+- map.h: neues struct config_t
+- mercator.c: neue Funktion get_lib_path (nochmals verbessert)
+- map.c: neue Funktion config_open
+- image.c: benutze config_open in load_picture
+- image.c: neues globales struct offset_t
+- image.c: einlesen der Datei cellgeometry.txt
+
+Neue Option zur Verkleinerung der Graphiken: scale, -sc
+- map.h: neues struct config_t
+- mercator.c: neue Funktion set_scale (nochmals verbessert)
+- image.c: benutze config.scale
+- mercator.c: ueberfluessige Optionen -wsh, -wsp entfernt
+
+Bugfixes:
+- html.c: Auf Vulkanen gibt es Arbeitsplaetze.
+- mercator.c: Fehlermeldung "read-cr / merge-cr benoetigt Argument"
+              wurde bisher niemals angezeigt.
+- parse/region.c: loesche keine Inselnamen in flood_fill
+- html.c: Verwendung der Eressea-eigenen Monatsnamen korrigiert
+- html.c: language.c: Verbesserung einzelner Uebersetzungen
+- html.c: Beseitigung einiger kleiner HTML-Syntaxfehler
+
+Verbessertes Debugging:
+- map.c: show_all_allocs verbessert, neue Funktion show_some_allocs
+- image.c: einige zusaetzliche assert-Befehle
+
+
+64.1:
+
+- html.c: Mallorn und Mallornschoesslinge wurden bei der Berechnung der 
+  freien Arbeitsplaetze ignoriert
+
+max. Kartengroesse wird jetzt ebenenweise abgespeichert; Dadurch sollte
+die Nachbearbeitung des Reports etwas schneller werden, falls mehrere Ebenen
+vorhanden sind.
+- map.h: max_x, max_y, min_x, min_y von map_t zu ebene_t bewegt
+- parse/region.c, map.c: die Liste aller Ebenen wird nun zentral in 
+  add_to_map() (map.c) verwaltet und nicht mehr in parse_region()
+- parse/parser.c, map.c, html.c, image.c: Anpassungen an Anderung in map.h
+
+64.0:
+
+- html.c: Veraenderungen gegenueber der Vorrunde anzeigen
+- map.c: der Regionslohn wurde bei write-cr um 1 Silber zu hoch abgespeichert
+
+63.3:
+Ingo Schwarze, 5.3.2002:
+- BESCHREIBE PRIVAT anzeigen,
+  aehnlich wie im NR mit (Bem: ...) hinter der Beschr.
+  Aenderungen in map.h, parse/einheiten.c, html.c
+- Aktive Vulkane und (astrale) Nebel einbauen.
+  Bei der Gelegenheit region_t gruendlich aufraeumen:
+  parse/region.c ist um mehr als 3%, image.c um gut 1% kleiner geworden,
+  map.h, map.c und html.c haben sich um weniger als 200 Byte geaendert -
+  bei reduzierter Komplexitaet und erweiterter Funktionalitaet...  :-)
+
+
+63.2:
+
+- mercator.c: Option -wsp hinzugefuegt (analog zu -wsh)
+- mercator.c: statt nur auf die README zu verweisen wird beim Start ohne
+  Optionen eine kleine Hilfe angezeigt
+- mercator.c: fuer die Option move kann das Kuerzel -m verwendet werden
+- map.c: bei move_map() wurde die Variable map schon vor dem Test auf NULL beschrieben
+- map.c: die Option write-map schreibt jetzt auch RESOURCE Bloecke
+- html.c: Anzeige der Veraenderung zur Vorwoche bei Resourcen eingefuehrt
+- map.h: Option ;noskillpoints wird gespeichert
+- html.c: Lerntage werden nicht mehr angezeigt bei noskillpoints == 1
+- html.c: Erstellung von Einzelkarten (momentan deaktiviert) wieder halbwegs
+  gangbar gemacht (fuer den Fall, dass das jemals wieder aktiviert werden sollte...)
+- image.c: Skalierung in write-png() erlauben
+- image.c: write-png() konnte bei mehreren Ebenen einen Absturz verursachen
+
+63.1:
+
+- map.c: statt region->durchschiffung wurde der Speicher von 
+         region->durchreise freigegeben -> moeglicher Absturz
