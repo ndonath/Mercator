@@ -24,7 +24,7 @@ INCLPATH = -I/usr/local/include/libpng
 LIBPATH  = -L/usr/local/lib
 
 # the following compiler flags make sense for production binaries
-USERFLAGS = -Wall -ansi -pedantic -O2 -DNDEBUG -g
+USERFLAGS = -Wall -std=c99 -pedantic -O2 -DNDEBUG -g
 
 # in case you want to debug the Mercator sources, try something like
 #USERFLAGS =  -gdwarf+ -Wall -ansi -pedantic -DMALLOC_DEBUG

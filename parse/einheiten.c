@@ -268,6 +268,8 @@ void parse_einheit(report_t *r, map_t *map, int x, int y, int z)
         /* hier muesste auch ein "ei->unaided = 1;" reichen */
         ei->unaided = atoi(r->argv[0]);
         get_report_line(r);
+    } else if (r->argc == 2 && !strcmp(r->argv[1], "familiarmage")) {
+        get_report_line(r);
     } else if (!strcmp(r->argv[0], "COMMANDS")) {
         parse_meldungen(r, &ei->commands);
     } else if (!strcmp(r->argv[0], "TALENTE")) {

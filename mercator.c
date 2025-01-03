@@ -26,8 +26,8 @@
 #include <stdio.h>
 #include "mercator.h"
 
-const int CRVERSION = 64;   /* hoechste bekannte CR-Version */
-const char *const MVERSION = "5";
+const int CRVERSION = 69;   /* hoechste bekannte CR-Version */
+const char *const MVERSION = "0";
 const int MYEAR = 2006;     /* Jahr des Copyright */
 config_t config;   /* globale Konfigurationsdaten */
 

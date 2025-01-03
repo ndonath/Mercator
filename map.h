@@ -230,6 +230,8 @@ typedef struct schiff_struct {
     int       max_groesse;/* Groesse eines fertiggestellten Schiffes */ 
     int       kueste;		/* Küste, an der es liegt (n,s,o,w) */
     int       ausgegeben;
+    int       speed;
+    int       anzahl;
     meldung_t    *first_effect;
 } schiff_t;
 

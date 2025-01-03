@@ -27,10 +27,16 @@ void get_report_line(report_t *r)
 {
     char *s;
     int i;
+    char tmp[REPORT_LINE_LEN];
 
     if (fgets(r->line, REPORT_LINE_LEN, r->fp) == NULL) {
       r->eof = 1;
       return;
+    }
+    if (r->line[0] == 0x3f) {
+      /* remove UTF-8 endianess indicator */
+      strcpy(tmp, r->line + 1);
+      strcpy(r->line, tmp);
     }
     s = r->line;
     r->is_block = 0;
@@ -51,8 +57,7 @@ void get_report_line(report_t *r)
               if (fgets(s + 1,
                     REPORT_LINE_LEN - (1 + s - r->argv[r->argc]),
                     r->fp) == NULL) {
-              fprintf(stderr, "unerwartetes Dateiende in Zeile %d\n",
-                  r->lnr);
+              fprintf(stderr, "unerwartetes Dateiende in Zeile %d\n", r->lnr);
               r->eof = 1;
               return;
               }
@@ -275,7 +280,7 @@ void parse_report(char *filename, map_t *map)
           get_report_line(r);
       } else if (r->argc == 2 && !strcmp(r->argv[1], "Spiel")) {
 #if WARNTAGS
-          if (strcmp(r->argv[0], "Eressea") != 0)
+	if ((strcmp(r->argv[0], "Eressea") != 0) && (strcmp(r->argv[0], "E3") != 0))
             printf("Warnung: Nur Eressea Reporte werden unterstuetzt!\n");
 #endif
           get_report_line(r);
@@ -315,6 +320,12 @@ void parse_report(char *filename, map_t *map)
           parse_messagetypes(r);
       } else if (!strcmp(r->argv[0], "TRANSLATION")) { /* vorlaeufig (quick-hack) */
           parse_messagetypes(r);
+      } else if (r->argc == 2 && !strcmp(r->argv[1], "charset")) {
+          get_report_line(r);
+      } else if (r->argc == 2 && !strcmp(r->argv[1], "Build")) {
+          get_report_line(r);
+      } else if (r->argc == 2 && !strcmp(r->argv[1], "max_units")) {
+          get_report_line(r);
       } else {
 #if WARNTAGS
         int      i;

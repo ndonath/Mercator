@@ -216,11 +216,19 @@ static void parse_schiff(report_t *r, map_entry_t *e)
     } else if (r->argc == 2 && !strcmp(r->argv[1], "MaxLadung")) {
         sch->max_ladung = atoi(r->argv[0]);
         get_report_line(r);
-    } else if(r->argc == 2 && !strcmp(r->argv[1], "cargo")) {
-        /* ignore as long as the old Ladung is available */
+    } else if (r->argc == 2 && !strcmp(r->argv[1], "cargo")) {
+        sch->ladung = atoi(r->argv[0]) / 100;
+	if (atoi(r->argv[0]) % 100 != 0)
+	  sch->ladung++;
         get_report_line(r);
-    } else if(r->argc == 2 && !strcmp(r->argv[1], "capacity")) {
-        /* ignore as long as the old MaxLadung is available */
+    } else if (r->argc == 2 && !strcmp(r->argv[1], "capacity")) {
+        sch->max_ladung = atoi(r->argv[0]) / 100;
+        get_report_line(r);
+    } else if (r->argc == 2 && !strcmp(r->argv[1], "speed")) {
+        sch->speed = atoi(r->argv[0]);
+        get_report_line(r);
+    } else if (r->argc == 2 && !strcmp(r->argv[1], "Anzahl")) {
+        sch->anzahl = atoi(r->argv[0]);
         get_report_line(r);
     } else if (r->is_block == 1) {
         break;
@@ -400,7 +408,7 @@ static void parse_resource(report_t *r, map_entry_t *e)
 {
     resource_t *rs = xmalloc(sizeof(resource_t));
 
-    sscanf(r->argv[0], "RESOURCE %d", &(rs->id));
+    sscanf(r->argv[0], "RESOURCE %u", &(rs->id));
 
     get_report_line(r);
     while (!r->eof) {
@@ -591,6 +599,8 @@ void parse_region(report_t *r, map_t *map, int offset)
            !strcmp(r->argv[0], "MESSAGETYPES") || 
            !strncmp(r->argv[0], "MESSAGETYPE ", 12)) {
         break;
+    } else if (r->argc == 2 && !strcmp(r->argv[1], "id")) {
+        get_report_line(r); /* erstmal ignorieren */
     } else if (r->is_block == 1) { /* sonstiger Block */
         parse_unbekannt(r);
     } else {

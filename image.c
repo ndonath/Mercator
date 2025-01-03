@@ -70,7 +70,7 @@ static const char *names[] = {
     "Feuer.png",        /* 14 */
     "Rand.png",         /* 15 */
     "Nebel.png",        /* 16 */
-    "Dicht.png",        /* 17 */
+    "Dicht.png"         /* 17 */
 };
 
 static picture_t *pictures[NR_REGIONS];
@@ -109,9 +109,11 @@ picture_t *load_picture(const char *name)
      * the normal method of doing things with libpng).  REQUIRED unless you
      * set up your own error handlers in the png_create_read_struct() earlier.
      */
+#if 0    
     if (setjmp(png_ptr->jmpbuf)) {
 	goto error_exit;
     }
+#endif
 
     png_init_io(png_ptr, fp);
     /*
@@ -224,12 +226,14 @@ int save_picture(picture_t *pic, const char *name)
      * Set error handling.  REQUIRED if you aren't supplying your own
      * error hadnling functions in the png_create_write_struct() call.
      */
+#if 0
     if (setjmp(png_ptr->jmpbuf)) {
 	/* If we get here, we had a problem writing the file */
 	fclose(fp);
 	png_destroy_write_struct(&png_ptr,  (png_infopp)NULL);
 	return -1;
     }
+#endif
     png_init_io(png_ptr, fp);
     png_set_IHDR(png_ptr, info_ptr, pic->x, pic->y, 8,
 		 PNG_COLOR_TYPE_RGB,
@@ -386,12 +390,30 @@ void init_image(void)
     char bildname[13];  /* Name der Bilddatei mit den Strassenbildern */
 
     fp = config_open("cellgeometry.txt");
-    fscanf(fp, "tx=%u\n", &offsets.tx);
-    fscanf(fp, "ty=%u\n", &offsets.ty);
-    fscanf(fp, "ox=%u\n", &offsets.ox);
-    fscanf(fp, "oy=%u\n", &offsets.oy);
-    fscanf(fp, "dx=%u\n", &offsets.dx);
-    fscanf(fp, "dy=%u\n", &offsets.dy);
+    if (fscanf(fp, "tx=%u\n", &offsets.tx) != 1) {
+      fprintf(stderr, "init_image(): Error parsing tx of %s\n", bildname);
+      exit(1);
+    }
+    if (fscanf(fp, "ty=%u\n", &offsets.ty) != 1) {
+      fprintf(stderr, "init_image(): Error parsing ty of %s\n", bildname);
+      exit(1);
+    }
+    if (fscanf(fp, "ox=%u\n", &offsets.ox) != 1) {
+      fprintf(stderr, "init_image(): Error parsing ox of %s\n", bildname);
+      exit(1);
+    }
+    if (fscanf(fp, "oy=%u\n", &offsets.oy) != 1) {
+      fprintf(stderr, "init_image(): Error parsing oy of %s\n", bildname);
+      exit(1);
+    }
+    if (fscanf(fp, "dx=%u\n", &offsets.dx) != 1) {
+      fprintf(stderr, "init_image(): Error parsing dx of %s\n", bildname);
+      exit(1);
+    }
+    if (fscanf(fp, "dy=%u\n", &offsets.dy) != 1) {
+      fprintf(stderr, "init_image(): Error parsing dy of %s\n", bildname);
+      exit(1);
+    }
     fclose(fp);
 
     offsets.tx /= config.scale;

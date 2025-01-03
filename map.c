@@ -400,7 +400,7 @@ void destroy_talent_liste(talent_t *t)
 
     while (t) {
 	next = t->next;
-	if (t->name);
+	if (t->name)
 	    xfree(t->name);
 	xfree(t);
         t = next;

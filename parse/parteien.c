@@ -40,8 +40,8 @@ partei_t *finde_partei(map_t *map, int nummer)
 char *finde_gruppe(map_t *map, int pnr, int gnr)
 {
   partei_t *partei = finde_partei(map, pnr);
-  gruppe_t *g;
-  if (partei != NULL);
+  gruppe_t *g = NULL;
+  if (partei != NULL)
     g=partei->first_gruppe;
 
   while ((g != NULL) && (g->nummer != gnr))
@@ -175,6 +175,16 @@ static void parse_gruppe(report_t *r, map_t *map, int pnr)
 }
 
 
+static void parse_partei_gegenstaende(report_t *r, partei_t *p)
+{
+  assert(p != NULL);
+  get_report_line(r);        /* skip "OPTIONEN" (oder ähnlich) */
+  while (!r->eof && !isupper(r->argv[0][0])) {
+    get_report_line(r);
+  }
+}
+
+
 void add_einheit_to_partei(map_t *map, einheit_t *ei)
 {
     partei_t *p;
@@ -298,6 +308,8 @@ void parse_partei(report_t *r, map_t *map, int passwort)
         p->banner = xstrdup(r->argv[0]);
         }
         get_report_line(r);
+    } else if (!strcmp(r->argv[0], "GEGENSTAENDE")) {
+        parse_partei_gegenstaende(r, p);
     } else if (!strcmp(r->argv[0], "OPTIONEN")) {
         parse_optionen(r, p);
     } else if (!strcmp(r->argv[0], "MELDUNGEN")) {

@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <limits.h>
 #include <ctype.h>
+#include <math.h>
 #include "mercator.h"
 
 #define EINZELKARTEN 0
@@ -619,6 +620,7 @@ static void write_uebersicht(html_t *h, partei_t *p, const char *prefix)
     int      iopt, idopt, ropt;
     char     *name;
     partei_t *mapp;
+    float    prozent;
    
     mapp = finde_partei(h->map, h->map->partei);
     if (p != NULL && p->name != NULL)
@@ -643,10 +645,12 @@ static void write_uebersicht(html_t *h, partei_t *p, const char *prefix)
               monatsnamen[(h->map->runde-22)%27/3],
               (h->map->runde-22)/27-5);
     fprintf(fp, "</h1>\n");
-    if (p->punktedurchschnitt != 0)
-      fprintf(fp, "%s: %d, %s: %d (%d%%)<br>\n", translate("Punkte", h->locale),
+    if (p->punktedurchschnitt != 0) {
+      prozent = roundf(100.0 * (float)p->punkte / (float)p->punktedurchschnitt * 100.0) / 100.0;
+      fprintf(fp, "%s: %d, %s: %d (%.2f%%)<br>\n", translate("Punkte", h->locale),
       p->punkte, translate("Punktedurchschnitt", h->locale),
-      p->punktedurchschnitt, p->punkte*100/p->punktedurchschnitt);
+      p->punktedurchschnitt, prozent);
+    }
     if (p->schatz > 0)
       fprintf(fp, "%s: %d %s<br>\n", translate("Reichsschatz", h->locale),
               p->schatz, translate("Silber", h->locale));
@@ -1181,7 +1185,7 @@ static void write_html_umgebung(html_t *h, hex_koor_t *r,
     w.min_vy = vy - 1;
     w.max_vy = vy + 1;
     name = xmalloc(40);
-    sprintf(name, "rm%08x", (unsigned)e);
+    sprintf(name, "rm%p", (void *)e);
     err = write_image_map(h, &w, r->z, prefix, name, efp, 1);
     if (err) {
       fprintf(stderr,
@@ -1540,6 +1544,10 @@ static void write_schiffe(map_t *map, map_entry_t *e, FILE *fp, int partei,
             fprintf(fp, ", (%d/%d)", sch->ladung, sch->max_ladung);
           if (sch->schaden != 0)
             fprintf(fp, ", %d%% %s", sch->schaden, translate("Schaden", map->locale));
+	  if (sch->anzahl > 0)
+            fprintf(fp, ", %s: %d", translate("Anzahl", map->locale), sch->anzahl);
+	  if (sch->speed > 0)
+            fprintf(fp, ", %s: %d", translate("Reichweite", map->locale), sch->speed);
           fprintf(fp, "\n<br>\n");
           if (sch->beschr != NULL)
             fprintf(fp, "<tt>%s</tt><BR>", sch->beschr);
